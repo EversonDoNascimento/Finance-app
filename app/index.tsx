@@ -1,5 +1,9 @@
+import PrimaryButton from "@/components/PrimaryButton";
+import TransactionModal from "@/components/TransactionModal";
 import { globalStyles } from "@/styles/global";
-import { Image, Text, View } from "react-native";
+import { TransactionType } from "@/types/TransactionType";
+import { useState } from "react";
+import { Image, StatusBar, Text, View } from "react-native";
 const transactions = [
   { id: "1", description: "Supermercado", amount: -50.75 },
   { id: "2", description: "Salário", amount: 2500.0 },
@@ -8,8 +12,19 @@ const transactions = [
 ];
 
 export default function Index() {
+  const [isShowModal, setIsShowModal] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const handleTransaction = async (data: TransactionType) => {
+    setIsLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    console.log(data);
+    setIsLoading(false);
+    setIsShowModal(false);
+  };
+
   return (
     <View style={globalStyles.container}>
+      <StatusBar barStyle="light-content" backgroundColor="#2C5F30"></StatusBar>
       <Image
         style={globalStyles.logo}
         source={require("@/assets/images/logo.png")}
@@ -19,13 +34,17 @@ export default function Index() {
       <Text style={globalStyles.balanceLabel}>Saldo Atual</Text>
       <Text style={globalStyles.balance}>R$ 1.529,85</Text>
       <View style={globalStyles.buttonsContainer}>
-        <View style={globalStyles.button}>
-          <Text style={globalStyles.buttonText}>Adicionar Receita</Text>
-        </View>
-        <View style={globalStyles.button}>
-          <Text style={globalStyles.buttonText}>Adicionar Despesa</Text>
-        </View>
+        <PrimaryButton
+          title="Adicionar Transação"
+          onPress={() => setIsShowModal(true)}
+        ></PrimaryButton>
       </View>
+      <TransactionModal
+        onClose={() => setIsShowModal(false)}
+        visible={isShowModal}
+        onSave={handleTransaction}
+        isLoading={isLoading}
+      ></TransactionModal>
       <Text style={globalStyles.sectionTitle}>Transações Recentes</Text>
       {transactions.map((transaction) => (
         <View style={globalStyles.transactionItem} key={transaction.id}>
