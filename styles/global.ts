@@ -42,7 +42,7 @@ export const globalStyles = StyleSheet.create({
     fontWeight: "700",
   },
   sectionTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "500",
     marginBottom: 10,
   },

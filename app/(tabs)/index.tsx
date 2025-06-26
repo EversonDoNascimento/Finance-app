@@ -2,17 +2,12 @@ import PrimaryButton from "@/components/PrimaryButton";
 import TransactionModal from "@/components/TransactionModal";
 import { globalStyles } from "@/styles/global";
 import { TransactionType } from "@/types/TransactionType";
+import { Link } from "expo-router";
 import { useState } from "react";
 import { Image, StatusBar, Text, View } from "react-native";
-const transactions = [
-  { id: "1", description: "Supermercado", amount: -50.75 },
-  { id: "2", description: "Salário", amount: 2500.0 },
-  { id: "3", description: "Restaurante", amount: -120.4 },
-  { id: "4", description: "Aluguel", amount: -800.0 },
-];
 
 export default function Index() {
-  const [isShowModal, setIsShowModal] = useState(true);
+  const [isShowModal, setIsShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const handleTransaction = async (data: TransactionType) => {
     setIsLoading(true);
@@ -21,7 +16,6 @@ export default function Index() {
     setIsLoading(false);
     setIsShowModal(false);
   };
-
   return (
     <View style={globalStyles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#2C5F30"></StatusBar>
@@ -45,24 +39,11 @@ export default function Index() {
         onSave={handleTransaction}
         isLoading={isLoading}
       ></TransactionModal>
-      <Text style={globalStyles.sectionTitle}>Transações Recentes</Text>
-      {transactions.map((transaction) => (
-        <View style={globalStyles.transactionItem} key={transaction.id}>
-          <Text style={globalStyles.transactionText}>
-            {transaction.description}
-          </Text>
-          <Text
-            style={[
-              globalStyles.transactionAmount,
-              transaction.amount < 0
-                ? globalStyles.expense
-                : globalStyles.income,
-            ]}
-          >
-            R$ {transaction.amount.toFixed(2)}
-          </Text>
-        </View>
-      ))}
+      <Text style={globalStyles.sectionTitle}>Transações recentes</Text>
+
+      <Link push href={"/transactions"}>
+        <Text>Ver transações</Text>
+      </Link>
     </View>
   );
 }
