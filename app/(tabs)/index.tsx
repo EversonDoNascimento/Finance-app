@@ -1,5 +1,6 @@
 import PrimaryButton from "@/components/PrimaryButton";
 import TransactionModal from "@/components/TransactionModal";
+import { useTransactions } from "@/contexts/transactionsContext";
 import { globalStyles } from "@/styles/global";
 import { TransactionType } from "@/types/TransactionType";
 import { Link } from "expo-router";
@@ -9,10 +10,12 @@ import { Image, StatusBar, Text, View } from "react-native";
 export default function Index() {
   const [isShowModal, setIsShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { saveTransaction } = useTransactions();
+
   const handleTransaction = async (data: TransactionType) => {
     setIsLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log(data);
+    saveTransaction(data);
     setIsLoading(false);
     setIsShowModal(false);
   };
