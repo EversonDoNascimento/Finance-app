@@ -68,4 +68,9 @@ export const globalStyles = StyleSheet.create({
   expense: {
     color: "red",
   },
+  emptyListText: {
+    fontSize: 16,
+    textAlign: "center",
+    marginTop: 20,
+  },
 });
