@@ -48,6 +48,7 @@ const TransactionModal: React.FC<Props> = ({
             title="Salvar transação"
             onPress={() => {
               onSave({
+                id: Date.now().toString(),
                 description: description,
                 amount: Number(amount),
               });
