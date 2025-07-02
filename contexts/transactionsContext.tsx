@@ -1,10 +1,12 @@
 import { TransactionType } from "@/types/TransactionType";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 interface ctxTransactionType {
   transactions: TransactionType[];
+  balance: number;
   isLoading: boolean;
   saveTransaction: (transaction: TransactionType) => void;
+  getLastTransactions: () => TransactionType[];
 }
 export const ctxTransactions = createContext<ctxTransactionType | null>(null);
 
@@ -15,15 +17,33 @@ export const TransactionProvider = ({
 }) => {
   const [transactions, setTransactions] = useState<TransactionType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [balance, setBalance] = useState(400);
 
+  const getLastTransactions = (limit: number = 5) => {
+    return [...transactions]
+      .sort((a, b) => b.referenceDate.getTime() - a.referenceDate.getTime())
+      .slice(0, limit);
+  };
   const saveTransaction = (transaction: TransactionType) => {
     setIsLoading(true);
     setTransactions((prevTransactions) => [...prevTransactions, transaction]);
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    setBalance(
+      transactions.reduce((total, transaction) => total + transaction.amount, 0)
+    );
+  }, [transactions]);
   return (
     <ctxTransactions.Provider
-      value={{ transactions, isLoading, saveTransaction }}
+      value={{
+        getLastTransactions,
+        transactions,
+        isLoading,
+        saveTransaction,
+        balance,
+      }}
     >
       {children}
     </ctxTransactions.Provider>
