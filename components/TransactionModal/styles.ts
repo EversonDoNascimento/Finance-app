@@ -33,4 +33,24 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 20,
   },
+  switchContainer: {
+    width: "100%",
+    alignItems: "flex-start",
+  },
+  calendarButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    backgroundColor: "blue",
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 30,
+  },
+  calendarButtonText: {
+    color: "#FFF",
+  },
+  switchLabel: {
+    marginVertical: 5,
+    fontWeight: "bold",
+  },
 });

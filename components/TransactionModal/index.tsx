@@ -1,6 +1,15 @@
 import { TransactionType } from "@/types/TransactionType";
+import { FontAwesome } from "@expo/vector-icons";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { useState } from "react";
-import { Modal, Pressable, Text, TextInput, View } from "react-native";
+import {
+  Modal,
+  Platform,
+  Pressable,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import PrimaryButton from "../PrimaryButton";
 import { styles } from "./styles";
 
@@ -19,6 +28,24 @@ const TransactionModal: React.FC<Props> = ({
 }) => {
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
+  const [haveDate, setHaveDate] = useState(false);
+
+  const [date, setDate] = useState(new Date());
+  const [show, setShow] = useState(false);
+
+  const onChange = (_event: any, selectedDate?: Date) => {
+    if (Platform.OS === "android") {
+      setShow(false);
+    }
+
+    if (selectedDate) {
+      setDate(selectedDate);
+    }
+  };
+
+  const showPicker = () => {
+    setShow(true);
+  };
 
   return (
     <Modal visible={visible} animationType="slide">
@@ -42,6 +69,25 @@ const TransactionModal: React.FC<Props> = ({
           keyboardType="default"
           returnKeyType="done"
         ></TextInput>
+        <View style={styles.switchContainer}>
+          <Text style={styles.switchLabel}>
+            Data selecionada: {date.toLocaleDateString("pt-BR")}
+          </Text>
+          <Pressable onPress={showPicker} style={styles.calendarButton}>
+            <FontAwesome name="calendar" size={20} color="white" />
+            <Text style={styles.calendarButtonText}>Selecionar outra data</Text>
+          </Pressable>
+
+          {show && (
+            <DateTimePicker
+              locale="pt-BR"
+              value={date}
+              mode="date"
+              display="spinner"
+              onChange={onChange}
+            />
+          )}
+        </View>
         <View style={styles.buttonsContainer}>
           <PrimaryButton
             isLoading={isLoading}
@@ -51,6 +97,7 @@ const TransactionModal: React.FC<Props> = ({
                 id: Date.now().toString(),
                 description: description,
                 amount: Number(amount),
+                referenceDate: date,
               });
               setAmount("");
               setDescription("");
