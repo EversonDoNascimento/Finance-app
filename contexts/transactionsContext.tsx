@@ -7,6 +7,8 @@ interface ctxTransactionType {
   isLoading: boolean;
   saveTransaction: (transaction: TransactionType) => void;
   getLastTransactions: () => TransactionType[];
+  findTransactionById: (id: string) => TransactionType | undefined;
+  updateTransaction: (id: string, newData: TransactionType) => void;
 }
 export const ctxTransactions = createContext<ctxTransactionType | null>(null);
 
@@ -29,7 +31,19 @@ export const TransactionProvider = ({
     setTransactions((prevTransactions) => [...prevTransactions, transaction]);
     setIsLoading(false);
   };
+  const findTransactionById = (id: string): TransactionType | undefined => {
+    return transactions.find((transaction) => transaction.id === id);
+  };
 
+  const updateTransaction = (id: string, newData: TransactionType) => {
+    setTransactions((current) =>
+      current.map((transaction) =>
+        transaction.id === id
+          ? { ...transaction, ...newData, id: transaction.id }
+          : transaction
+      )
+    );
+  };
   useEffect(() => {
     setBalance(
       transactions.reduce((total, transaction) => total + transaction.amount, 0)
@@ -43,6 +57,8 @@ export const TransactionProvider = ({
         isLoading,
         saveTransaction,
         balance,
+        findTransactionById,
+        updateTransaction,
       }}
     >
       {children}
