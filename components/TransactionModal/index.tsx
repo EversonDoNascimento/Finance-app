@@ -18,6 +18,7 @@ type Props = {
   onSave: (data: TransactionType) => void;
   visible: boolean;
   isLoading?: boolean;
+  transaction?: TransactionType;
 };
 
 const TransactionModal: React.FC<Props> = ({
@@ -25,12 +26,16 @@ const TransactionModal: React.FC<Props> = ({
   onSave,
   visible,
   isLoading,
+  transaction,
 }) => {
-  const [description, setDescription] = useState("");
-  const [amount, setAmount] = useState("");
-  const [haveDate, setHaveDate] = useState(false);
+  const [description, setDescription] = useState(
+    transaction?.description ?? ""
+  );
+  const [amount, setAmount] = useState(transaction?.amount ?? "");
 
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(
+    new Date(transaction?.referenceDate ?? Date.now())
+  );
   const [show, setShow] = useState(false);
 
   const onChange = (_event: any, selectedDate?: Date) => {
@@ -50,7 +55,9 @@ const TransactionModal: React.FC<Props> = ({
   return (
     <Modal visible={visible} animationType="slide">
       <View style={styles.modalContent}>
-        <Text style={styles.title}>Adicionar Receita</Text>
+        <Text style={styles.title}>
+          {transaction ? "Editar Receita" : "Adicionar Receita"}
+        </Text>
         <Text>Descrição:</Text>
         <TextInput
           style={styles.textInput}
@@ -64,7 +71,7 @@ const TransactionModal: React.FC<Props> = ({
         <TextInput
           style={styles.textInput}
           placeholder="Informe um valor"
-          value={amount}
+          value={amount + ""}
           onChangeText={setAmount}
           keyboardType="default"
           returnKeyType="done"
